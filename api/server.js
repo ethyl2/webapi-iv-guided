@@ -8,7 +8,7 @@ const server = express();
 server.use(helmet());
 server.use(express.json());
 
-server.get('/', (req, res) => {
+server.get('/', logger, (req, res) => {
   Shoutouts.find()
   .then(shoutouts => {
     res.status(200).json(shoutouts);
@@ -19,7 +19,7 @@ server.get('/', (req, res) => {
   });
 });
 
-server.get('/motd', (req, res) => {
+server.get('/motd', logger, (req, res) => {
   const messageOfTheDay = process.env.MOTD || 'Sunlight is painting. -Nathaniel Hawthorne';
   Shoutouts.find()
   .then(shoutouts => {
@@ -33,7 +33,7 @@ server.get('/motd', (req, res) => {
 
 
 
-server.post('/', (req, res) => {
+server.post('/', logger, (req, res) => {
   Shoutouts.add(req.body)
   .then(shoutout => {
     res.status(201).json(shoutout);
@@ -43,5 +43,12 @@ server.post('/', (req, res) => {
     res.status(500).json({ error: 'Cannot add the shoutout' });
   });
 });
+
+function logger(req, res, next) {
+  console.log(
+    `[${new Date().toISOString()}] ${req.method} to ${req.url} from ${req.get('host')}`
+  );
+  next();
+}
 
 module.exports = server;
