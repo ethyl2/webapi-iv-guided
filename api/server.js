@@ -20,9 +20,10 @@ server.get('/', (req, res) => {
 });
 
 server.get('/motd', (req, res) => {
+  const messageOfTheDay = process.env.MOTD || 'Sunlight is painting. -Nathaniel Hawthorne';
   Shoutouts.find()
   .then(shoutouts => {
-    res.status(200).json(shoutouts);
+    res.status(200).json({shoutouts, "motd": messageOfTheDay});
   })
   .catch (error => {
     console.error('\nERROR', error);
