@@ -34,6 +34,11 @@ server.get('/motd', logger, (req, res) => {
 
 
 server.post('/', logger, (req, res) => {
+  /*
+  body example: 
+  {"message": "Here is an example"}
+  */
+
   Shoutouts.add(req.body)
   .then(shoutout => {
     res.status(201).json(shoutout);
